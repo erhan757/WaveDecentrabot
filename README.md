@@ -24,12 +24,24 @@
 2. **Установите зависимости:**
    ```bash
    pip install -r requirements.txt
+   python-telegram-bot==20.7
+   mysql-connector-python
+Пояснения:
+
+python-telegram-bot — основной пакет для работы с Telegram API.
+mysql-connector-python — для работы с MySQL через Python.
+aiohttp, asyncio и стандартные модули (os, json, logging, datetime, html.parser) устанавливать не нужно — они входят в стандартную библиотеку Python.
    ```
 
-3. **Добавьте токен вашего Telegram-бота:**
+3. **Добавьте токен вашего или моего Telegram-бота:**
    - Создайте файл `.env` или внесите токен в переменную окружения `TELEGRAM_BOT_TOKEN`.
+4 Добавьте вашу база данных, я брал свой mysql:
+DB_HOST = "localhost"
+DB_USER = "root"
+DB_PASSWORD = "12345sport"
+DB_NAME = "my_new_database"
 
-4. **Запустите бота:**
+5. **Запустите бота:**
    ```bash
    python main.py
    ```
