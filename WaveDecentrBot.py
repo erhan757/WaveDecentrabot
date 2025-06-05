@@ -73,9 +73,15 @@ Decentrathon — это конкурс для разработчиков, нап
 CONTACTS_TEXT = """
 📞 Контакты организаторов Decentrathon:
 
-- Email: support@decentrathon.kz  
+- Официальный канал Decentrathon 
+комюнити разработчиков 
+
+платформа для хакатонов - t.me/decentra_world_bot/app 
+
+чат - https://t.me/+udwyw0P7MAIzNzYy
+
+по вопросам сотрудничества и размещения рекламы: @sammExe
 - Telegram: @DecentrathonSupport  
-- ВКонтакте: vk.com/decentrathon  
 """
 
 # --- Данные для напоминаний ---
@@ -405,40 +411,6 @@ async def set_welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
     save_config(config)
     await update.message.reply_text("✅ Приветствие обновлено!")
     logger.info(f"Приветствие обновлено админом {user.id}")
-
-async def set_links(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Команда админа для обновления кнопок."""
-    user = update.effective_user
-    if not user or not user.id or not is_admin(user.id):
-        await update.message.reply_text("У вас нет прав для выполнения этой команды.")
-        return
-    if not context.args:
-        await update.message.reply_text(
-            "Использование: /set_links <json кнопок>\n"
-            "Пример: `[{\"text\": \"Кнопка\", \"url\": \"https://example.com\"}]`\n"
-            "⚠️ Не более 4 кнопок.",
-            parse_mode='Markdown'
-        )
-        return
-    try:
-        buttons = json.loads(" ".join(context.args))
-        for btn in buttons:
-            if not isinstance(btn, dict) or 'text' not in btn or 'url' not in btn:
-                raise ValueError("Каждый элемент должен содержать 'text' и 'url'.")
-            if not isinstance(btn['text'], str) or not isinstance(btn['url'], str):
-                raise ValueError("'text' и 'url' должны быть строками.")
-        if len(buttons) > 4:
-            await update.message.reply_text("⚠️ Рекомендуется до 4 кнопок.", parse_mode='Markdown')
-        config = load_config()
-        config["buttons"] = buttons
-        save_config(config)
-        await update.message.reply_text("✅ Кнопки обновлены!")
-        logger.info(f"Кнопки обновлены админом {user.id}")
-    except json.JSONDecodeError as e:
-        await update.message.reply_text(f"⚠️ Ошибка JSON: `{e}`.", parse_mode='Markdown')
-    except ValueError as e:
-        await update.message.reply_text(f"⚠️ Ошибка валидации: `{e}`", parse_mode='Markdown')
-
 async def preview(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Команда админа для предпросмотра приветствия."""
     user = update.effective_user
@@ -718,7 +690,6 @@ async def main():
             BotCommand("contacts", "Get organizers' contact information"),
             BotCommand("feedback", "Send feedback to organizers"),
             BotCommand("set_welcome", "Set a custom welcome message for new members"),
-            BotCommand("set_links", "Set quick access links for group messages"),
             BotCommand("preview", "Preview the current welcome message or links"),
             BotCommand("notify", "Create an event and notify users"),
             BotCommand("empty", "Clear all commands")
@@ -730,7 +701,6 @@ async def main():
         app.add_handler(CommandHandler("start", start))
         app.add_handler(ChatMemberHandler(welcome_new_member, ChatMemberHandler.CHAT_MEMBER))
         app.add_handler(CommandHandler("set_welcome", set_welcome))
-        app.add_handler(CommandHandler("set_links", set_links))
         app.add_handler(CommandHandler("preview", preview))
         app.add_handler(CommandHandler("notify", notify_command))
         app.add_handler(CommandHandler("empty", empty_command))
